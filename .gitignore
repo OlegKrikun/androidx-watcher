@@ -1,0 +1,5 @@
+.gradle
+.idea
+build
+androidx.json
+androidx-watcher.properties

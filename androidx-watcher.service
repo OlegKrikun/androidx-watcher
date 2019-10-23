@@ -1,0 +1,14 @@
+[Unit]
+Description=androidx-watcher service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+SuccessExitStatus=143
+ExecStart=/usr/bin/java -jar /opt/androidx-watcher/androidx-watcher-all.jar
+WorkingDirectory=/opt/androidx-watcher/
+Restart=on-failure
+RestartSec=15s
+
+[Install]
+WantedBy=multi-user.target
