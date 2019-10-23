@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 SuccessExitStatus=143
-ExecStart=/usr/bin/java -jar /opt/androidx-watcher/androidx-watcher-all.jar
+ExecStart=/usr/bin/java -jar /opt/androidx-watcher/androidx-watcher.jar
 WorkingDirectory=/opt/androidx-watcher/
 Restart=on-failure
 RestartSec=15s
