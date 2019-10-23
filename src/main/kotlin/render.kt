@@ -1,21 +1,24 @@
-private const val SEPARATOR = "\n\n"
+private const val SEPARATOR = "\n"
+private const val TELEGRAM_MAX_UTF8_CHARS = 4096
 
-fun List<Artifact>.render() = groupBy {
-    it.key
-}.map { (key, items) ->
-    val (name, link, version) = key
-    "*$name $version* [»]($link)\n" + items.joinToString("\n") { "`${it.id}`" }
-}.fold(mutableListOf("")) { acc, text ->
-    acc.apply {
-        val last = last()
-        if (last.length + SEPARATOR.length + text.length < 4096) {
-            removeAt(lastIndex)
-            add(last + SEPARATOR + text)
+fun List<Artifact>.render() = groupBy { it.key }.flatMap { it.render() }
+
+private fun Map.Entry<Key, List<Artifact>>.render() = value.fold(listOf(key.render())) { list, item ->
+    list.dropLast(1) + list.last().let { last ->
+        val text = item.render().also {
+            check(it.length < TELEGRAM_MAX_UTF8_CHARS) { "artifact render too long: $it" }
+        }
+        if (last.length + SEPARATOR.length + text.length < TELEGRAM_MAX_UTF8_CHARS) {
+            listOf(last + SEPARATOR + text)
         } else {
-            add(text)
+            listOf(last, text)
         }
     }
 }
+
+private fun Artifact.render() = "`$id`"
+
+private fun Key.render() = "*$name $version* [»]($link)"
 
 private data class Key(val name: String, val link: String, val version: String)
 
