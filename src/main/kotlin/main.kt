@@ -27,7 +27,9 @@ fun main() {
                     remote(httpClient, DocumentBuilderFactory.newInstance())
                 },
                 remoteWriter = {
-                    it.render().forEach { message -> notify(httpClient, config.token, config.channel, message) }
+                    it.render().forEachIndexed { i, msg ->
+                        notify(httpClient, config.token, config.channel, msg, mute = i != 0)
+                    }
                 })
         } catch (e: Exception) {
             error("error: ${e.localizedMessage}")
