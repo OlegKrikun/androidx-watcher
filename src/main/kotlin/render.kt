@@ -1,8 +1,8 @@
 private const val MAX_MESSAGE_LENGTH = 4096
 
 private const val SEPARATOR = "\n"
-private const val PREFIX = "```\n"
-private const val SUFFIX = "\n```"
+private const val PREFIX = "\n"
+private const val SUFFIX = "\n"
 private const val TRUNCATED_SUFFIX = "...$SUFFIX"
 
 fun render(key: Artifact.Key, list: List<Artifact>): String {
