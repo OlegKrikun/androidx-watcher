@@ -5,11 +5,9 @@ private const val PREFIX = "```\n"
 private const val SUFFIX = "\n```"
 private const val TRUNCATED_SUFFIX = "...$SUFFIX"
 
-fun List<Artifact>.render() = groupBy { it.key }.map { it.render() }
-
-private fun Map.Entry<Artifact.Key, List<Artifact>>.render(): String {
+fun render(key: Artifact.Key, list: List<Artifact>): String {
     val title = "${key.version.marker()} *${key.title} ${key.version}* [»](${key.link})$SEPARATOR"
-    val body = value.joinToString(SEPARATOR, PREFIX, SUFFIX) { it.id }
+    val body = list.joinToString(SEPARATOR, PREFIX, SUFFIX) { it.id }
     val resultLength = title.length + body.length
     return when {
         resultLength <= MAX_MESSAGE_LENGTH -> title + body

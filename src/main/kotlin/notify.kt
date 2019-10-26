@@ -2,7 +2,7 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-fun notify(httpClient: OkHttpClient, token: String, chatId: String, text: String, mute: Boolean): String? {
+fun notify(httpClient: OkHttpClient, token: String, chatId: String, text: String, mute: Boolean): String {
     val url = HttpUrl.Builder()
         .scheme("https")
         .host("api.telegram.org")
@@ -16,5 +16,10 @@ fun notify(httpClient: OkHttpClient, token: String, chatId: String, text: String
     val request: Request = Request.Builder()
         .url(url)
         .build()
-    return httpClient.newCall(request).execute().use { it.body?.string() }
+    return httpClient.newCall(request).execute().use {
+        when {
+            it.isSuccessful -> it.message
+            else -> throw RuntimeException("http [${it.code}] ${it.message}")
+        }
+    }
 }
