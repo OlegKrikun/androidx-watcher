@@ -23,6 +23,7 @@ tasks.withType<KotlinCompile> {
 
 val libs: Set<File> = configurations.getByName("runtimeClasspath").files
 tasks.withType(Jar::class) {
+    archiveFileName.set("androidx-watcher.jar")
     manifest.attributes(
         "Main-Class" to "MainKt",
         "Class-Path" to libs.joinToString(" ") { "lib/${it.name}" }
