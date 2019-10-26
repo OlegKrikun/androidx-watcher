@@ -15,6 +15,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.2.1")
 }
 
+version = "0.2.0"
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
@@ -28,7 +30,6 @@ tasks.withType(Jar::class) {
 }
 tasks.create("deb", Deb::class) {
     group = "build"
-    version = "0.1.0"
 
     preInstall(file("scripts/preInstall.sh"))
     postInstall(file("scripts/postInstall.sh"))
