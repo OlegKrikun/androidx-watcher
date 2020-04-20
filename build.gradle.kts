@@ -46,3 +46,5 @@ tasks.create("deb", Deb::class) {
 
     link("/etc/systemd/system/androidx-watcher.service", "/opt/androidx-watcher/service/androidx-watcher.service")
 }
+
+tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
