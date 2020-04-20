@@ -1,6 +1,10 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+private const val LINK_ARCH = "https://developer.android.com/jetpack/androidx/releases/arch#"
+private const val LINK_COMPOSE = "https://developer.android.com/jetpack/compose"
+private const val LINK_TESTS = "https://developer.android.com/jetpack/androidx/releases/test"
+
 @Serializable
 data class Artifact(
     val group: String,
@@ -9,6 +13,7 @@ data class Artifact(
 ) {
     @Transient
     val id = "$group:$name:$version"
+
     @Transient
     val key = keyOf(this)
 
@@ -20,87 +25,83 @@ data class Artifact(
 private fun keyOf(a: Artifact): Artifact.Key = when {
     a.group == "androidx.annotation" && a.name.startsWith("annotation-experimental") -> a.createKey(
         "Annotation Experimental",
-        "https://developer.android.com/jetpack/androidx/releases/annotation#experimental-${a.version}"
+        "annotation#experimental"
     )
-    a.group == "androidx.arch.core" -> a.createKey(
-        "Arch",
-        "https://developer.android.com/jetpack/androidx/releases/arch#${a.version}"
+
+    a.group == "androidx.arch.core" -> a.createKey("Arch", fullLink = LINK_ARCH + a.version)
+
+    a.group == "androidx.camera" && a.name == "camera-camera2" -> a.createKey("Camera-Camera2", "camera#camera-camera2")
+    a.group == "androidx.camera" && a.name == "camera-core" -> a.createKey("Camera-Core", "camera#camera-core")
+    a.group == "androidx.camera" && a.name == "camera-extensions" -> a.createKey(
+        "Camera-Extensions",
+        "camera#camera-extensions"
     )
-    a.group == "androidx.camera" -> a.createKey(
-        "CameraX",
-        "https://developer.android.com/jetpack/androidx/releases/camera#camera2-core-${a.version}"
+    a.group == "androidx.camera" && a.name == "camera-lifecycle" -> a.createKey(
+        "Camera-Lifecycle",
+        "camera#camera-lifecycle"
     )
-    a.group == "androidx.car" && a.name == "car-cluster" -> a.createKey(
-        "Car",
-        "https://developer.android.com/jetpack/androidx/releases/car#car-cluster-${a.version}"
-    )
-    a.group == "androidx.compose" -> a.createKey(
-        "Jetpack Compose",
-        "https://developer.android.com/jetpack/compose"
-    )
+    a.group == "androidx.camera" && a.name == "camera-view" -> a.createKey("Camera-View", "camera#camera-view")
+
+    a.group == "androidx.car" && a.name == "car-cluster" -> a.createKey("Car", "car#car-cluster")
+
+    a.group == "androidx.compose" -> a.createKey("Jetpack Compose", fullLink = LINK_COMPOSE)
+
     a.group == "androidx.concurrent" && a.name.startsWith("concurrent-listenablefuture") -> a.createKey(
         "Concurrent",
-        "https://developer.android.com/jetpack/androidx/releases/concurrent#concurrent-listenableFuture-${a.version}"
+        "concurrent#concurrent-listenableFuture"
     )
-    a.group.startsWith("androidx.test.espresso") -> a.createKey(
-        "Test: Espresso",
-        "https://developer.android.com/jetpack/androidx/releases/test"
+
+    a.group == "androidx.core" && a.name == "core-animation" -> a.createKey("Core-Animation", "core#core-animation")
+    a.group == "androidx.core" && a.name == "core-role" -> a.createKey("Core-Role", "core#core-role")
+
+    a.group == "androidx.customview" -> a.createKey("CustomView")
+
+    a.group == "androidx.drawerlayout" -> a.createKey("DrawerLayout")
+
+    a.group == "androidx.exifinterface" -> a.createKey("ExifInterface")
+
+    a.group == "androidx.recyclerview" -> a.createKey("RecyclerView")
+
+    a.group == "androidx.security" && a.name == "security-crypto" -> a.createKey("Security-Crypto")
+
+    a.group == "androidx.slidingpanelayout" -> a.createKey("SlidingPaneLayout")
+
+    a.group.startsWith("androidx.test.espresso") -> a.createKey("Test: Espresso", fullLink = LINK_TESTS)
+    a.group == "androidx.test.ext" && a.name.startsWith("junit") -> a.createKey("Test: Junit", fullLink = LINK_TESTS)
+    a.group == "androidx.test.ext" && a.name == "truth" -> a.createKey("Test: Truth", fullLink = LINK_TESTS)
+    a.group == "androidx.test.janktesthelper" -> a.createKey("Test: Janktesthelper", fullLink = LINK_TESTS)
+    a.group == "androidx.test.services" -> a.createKey("Test: Service", fullLink = LINK_TESTS)
+    a.group == "androidx.test.uiautomator" -> a.createKey("Test: Uiautomator", fullLink = LINK_TESTS)
+    a.group == "androidx.test" && a.name.startsWith("core") -> a.createKey("Test: Core", fullLink = LINK_TESTS)
+    a.group == "androidx.test" && a.name == "monitor" -> a.createKey("Test: Monitor", fullLink = LINK_TESTS)
+    a.group == "androidx.test" && a.name == "orchestrator" -> a.createKey("Test: Orchestrator", fullLink = LINK_TESTS)
+    a.group == "androidx.test" && a.name == "rules" -> a.createKey("Test: Rules", fullLink = LINK_TESTS)
+    a.group == "androidx.test" && a.name == "runner" -> a.createKey("Test: Runner", fullLink = LINK_TESTS)
+
+    a.group == "androidx.ui" -> a.createKey("Jetpack Compose UI", fullLink = LINK_COMPOSE)
+
+    a.group == "androidx.vectordrawable" && a.name == "vectordrawable-seekable" -> a.createKey(
+        "Vectordrawable-Seekable",
+        "vectordrawable#vectordrawable-seekable"
     )
-    a.group == "androidx.test.ext" && a.name.startsWith("junit") -> a.createKey(
-        "Test: Junit",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test.ext" && a.name == "truth" -> a.createKey(
-        "Test: Truth",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test.janktesthelper" -> a.createKey(
-        "Test: Janktesthelper",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test.services" -> a.createKey(
-        "Test: Service",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test.uiautomator" -> a.createKey(
-        "Test: Uiautomator",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test" && a.name.startsWith("core") -> a.createKey(
-        "Test: Core",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test" && a.name == "monitor" -> a.createKey(
-        "Test: Monitor",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test" && a.name == "orchestrator" -> a.createKey(
-        "Test: Orchestrator",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test" && a.name == "rules" -> a.createKey(
-        "Test: Rules",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.test" && a.name == "runner" -> a.createKey(
-        "Test: Runner",
-        "https://developer.android.com/jetpack/androidx/releases/test"
-    )
-    a.group == "androidx.ui" -> a.createKey(
-        "Jetpack Compose UI",
-        "https://developer.android.com/jetpack/compose"
-    )
+
     a.group == "androidx.work" -> a.createKey("WorkManager")
+
     else -> a.createKey()
 }
 
-private fun Artifact.createKey(name: String? = null, link: String? = null) = when {
-    name == null || link == null -> group.removePrefix("androidx.").let { groupSuffix ->
+private fun Artifact.createKey(name: String? = null, linkSuffix: String? = null, fullLink: String? = null) = when {
+    name == null || fullLink == null -> group.removePrefix("androidx.").let { groupSuffix ->
         Artifact.Key(
             name ?: groupSuffix.capitalize(),
-            link ?: "https://developer.android.com/jetpack/androidx/releases/$groupSuffix#$version",
+            fullLink ?: createUrl(groupSuffix, linkSuffix),
             version
         )
     }
-    else -> Artifact.Key(name, link, version)
+    else -> Artifact.Key(name, fullLink, version)
+}
+
+private fun Artifact.createUrl(groupSuffix: String, linkSuffix: String? = null) = when {
+    linkSuffix != null -> "https://developer.android.com/jetpack/androidx/releases/$linkSuffix-$version"
+    else -> "https://developer.android.com/jetpack/androidx/releases/$groupSuffix#$version"
 }
