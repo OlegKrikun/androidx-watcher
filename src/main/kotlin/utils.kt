@@ -1,0 +1,1 @@
+fun error(string: String) = System.err.println(string)

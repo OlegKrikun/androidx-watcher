@@ -7,9 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 private typealias Reader = () -> List<Artifact>?
 private typealias Writer = (List<Artifact>) -> Unit
-private typealias Publisher = (Artifact.Key, List<Artifact>, Boolean) -> String
-
-private const val PUBLISH_PAUSE = 1000L
+private typealias Publisher = (List<Artifact>) -> List<Artifact>
 
 fun main() {
     val config = Config(File("androidx-watcher.properties"))
@@ -32,8 +30,8 @@ fun main() {
                 remoteReader = {
                     remote(httpClient, DocumentBuilderFactory.newInstance())
                 },
-                publisher = { key, list, mute ->
-                    notify(httpClient, config.token, config.channel, render(key, list), mute)
+                publisher = {
+                    it.publish(httpClient, config.token, config.channel)
                 })
         } catch (e: Exception) {
             error("error: ${e.localizedMessage}")
@@ -78,19 +76,7 @@ private inline fun update(
         else -> (remote - local).let { new ->
             println("found ${new.size} new artifacts")
 
-            val notified = new.groupBy { it.key }
-                .entries
-                .mapIndexedNotNull { index, (key, artifacts) ->
-                    print("publish: ${key.title} ${key.version} -> ")
-                    runCatching { publisher(key, artifacts, index != 0) }
-                        .onFailure { error(it.localizedMessage) }
-                        .onSuccess { println(it) }
-                        .getOrNull()
-                        ?.let { artifacts }
-                        .also { Thread.sleep(PUBLISH_PAUSE) }
-                }
-                .flatten()
-
+            val notified = publisher(new)
             (local + notified)
                 .sortedBy { it.id }
                 .let {
@@ -119,4 +105,3 @@ private fun defaultHttpClient() = OkHttpClient.Builder()
     .connectTimeout(1, TimeUnit.MINUTES)
     .build()
 
-private fun error(string: String) = System.err.println(string)
