@@ -1,5 +1,4 @@
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -15,7 +14,7 @@ fun main() {
 
     while (true) {
         val dataFile = File("androidx.json")
-        val json = Json(JsonConfiguration.Stable)
+        val json = Json { allowStructuredMapKeys = true }
         val httpClient = defaultHttpClient()
         val nextTime = try {
             update(
