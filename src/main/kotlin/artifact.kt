@@ -94,7 +94,7 @@ private fun Artifact.createKey(name: String? = null, linkSuffix: String? = null,
     name == null || fullLink == null -> group.removePrefix("androidx.").let { groupSuffix ->
         Artifact.Key(
             name ?: groupSuffix.split(".").joinToString(separator = " ") { it.capitalize() },
-            fullLink ?: createUrl(groupSuffix, linkSuffix),
+            fullLink ?: createUrl(groupSuffix.replace(".", "-"), linkSuffix),
             version
         )
     }
