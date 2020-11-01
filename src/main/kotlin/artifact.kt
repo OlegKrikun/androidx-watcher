@@ -2,7 +2,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 private const val LINK_ARCH = "https://developer.android.com/jetpack/androidx/releases/arch#"
-private const val LINK_COMPOSE = "https://developer.android.com/jetpack/compose"
 private const val LINK_TESTS = "https://developer.android.com/jetpack/androidx/releases/test"
 
 @Serializable
@@ -44,8 +43,6 @@ private fun keyOf(a: Artifact): Artifact.Key = when {
 
     a.group == "androidx.car" && a.name == "car-cluster" -> a.createKey("Car", "car#car-cluster")
 
-    a.group == "androidx.compose" -> a.createKey("Jetpack Compose", fullLink = LINK_COMPOSE)
-
     a.group == "androidx.concurrent" && a.name.startsWith("concurrent-listenablefuture") -> a.createKey(
         "Concurrent",
         "concurrent#concurrent-listenableFuture"
@@ -78,7 +75,7 @@ private fun keyOf(a: Artifact): Artifact.Key = when {
     a.group == "androidx.test" && a.name == "rules" -> a.createKey("Test: Rules", fullLink = LINK_TESTS)
     a.group == "androidx.test" && a.name == "runner" -> a.createKey("Test: Runner", fullLink = LINK_TESTS)
 
-    a.group == "androidx.ui" -> a.createKey("Jetpack Compose UI", fullLink = LINK_COMPOSE)
+    a.group == "androidx.ui" -> a.createKey("Compose UI", linkSuffix = "compose-ui")
 
     a.group == "androidx.vectordrawable" && a.name == "vectordrawable-seekable" -> a.createKey(
         "Vectordrawable-Seekable",
@@ -93,7 +90,12 @@ private fun keyOf(a: Artifact): Artifact.Key = when {
 private fun Artifact.createKey(name: String? = null, linkSuffix: String? = null, fullLink: String? = null) = when {
     name == null || fullLink == null -> group.removePrefix("androidx.").let { groupSuffix ->
         Artifact.Key(
-            name ?: groupSuffix.split(".").joinToString(separator = " ") { it.capitalize() },
+            name ?: groupSuffix.split(".").joinToString(separator = " ") {
+                when (it) {
+                    "ui" -> "UI"
+                    else -> it.capitalize()
+                }
+            },
             fullLink ?: createUrl(groupSuffix.replace(".", "-"), linkSuffix),
             version
         )
