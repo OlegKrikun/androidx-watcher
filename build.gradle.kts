@@ -16,7 +16,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
 }
 
-version = "0.3.0"
+version = "0.4.0"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
