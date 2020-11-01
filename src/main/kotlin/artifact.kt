@@ -93,7 +93,7 @@ private fun keyOf(a: Artifact): Artifact.Key = when {
 private fun Artifact.createKey(name: String? = null, linkSuffix: String? = null, fullLink: String? = null) = when {
     name == null || fullLink == null -> group.removePrefix("androidx.").let { groupSuffix ->
         Artifact.Key(
-            name ?: groupSuffix.capitalize(),
+            name ?: groupSuffix.split(".").joinToString(separator = " ") { it.capitalize() },
             fullLink ?: createUrl(groupSuffix, linkSuffix),
             version
         )
