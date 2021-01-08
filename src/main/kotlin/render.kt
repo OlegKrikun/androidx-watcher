@@ -5,7 +5,7 @@ private const val PREFIX = "\n"
 private const val SUFFIX = "\n"
 private const val TRUNCATED_SUFFIX = "...$SUFFIX"
 
-fun render(key: Artifact.Key, list: List<Artifact>): String {
+fun render(key: Artifact.Key, list: List<Artifact>): Message {
     val title = "${key.version.marker()} *${key.title} ${key.version}* [»](${key.link})$SEPARATOR"
     val body = list.joinToString(SEPARATOR, PREFIX, SUFFIX) { it.id }
     val resultLength = title.length + body.length
@@ -14,7 +14,7 @@ fun render(key: Artifact.Key, list: List<Artifact>): String {
         else -> {
             title + body.dropLast(resultLength + TRUNCATED_SUFFIX.length - MAX_MESSAGE_LENGTH) + TRUNCATED_SUFFIX
         }
-    }
+    }.let { Message(it) }
 }
 
 private const val ICON_RELEASE = "\uD83C\uDF89"
