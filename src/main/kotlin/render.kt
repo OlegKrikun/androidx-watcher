@@ -5,12 +5,17 @@ private const val ICON_CANDIDATE = "💡"
 private const val ICON_UNSTABLE = "⚙"
 
 fun render(key: Artifact.Key, list: List<Artifact>): Message {
+    val entities = mutableListOf<Message.Entity>()
     val text = buildString {
         append(key.marker)
         append(' ')
-        append(key.name)
+        append(key.name) { offset, length ->
+            entities.add(BoldEntity(offset, length))
+        }
         append(' ')
-        append('»')
+        append("»") { offset, length ->
+            entities.add(LinkEntity(offset, length, key.link))
+        }
         append('\n')
 
         for (it in list) {
@@ -24,7 +29,7 @@ fun render(key: Artifact.Key, list: List<Artifact>): Message {
             }
         }
     }
-    return Message(text)
+    return Message(text, entities)
 }
 
 private val releaseRegex = "^\\d+\\.\\d+\\.\\d+\$".toRegex()
@@ -36,3 +41,11 @@ private val Artifact.Key.marker
         else -> ICON_UNSTABLE
     }
 private val Artifact.Key.name get() = "$title $version"
+
+private inline fun StringBuilder.append(
+    string: String,
+    onAppend: (offset: Int, length: Int) -> Unit
+) {
+    onAppend(length, string.length)
+    append(string)
+}
