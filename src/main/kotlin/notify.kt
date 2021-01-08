@@ -3,7 +3,7 @@ import okhttp3.Request
 
 fun notify(
     context: Context,
-    text: String,
+    message: Message,
     mute: Boolean
 ): String {
     val url = HttpUrl.Builder()
@@ -11,7 +11,7 @@ fun notify(
         .host("api.telegram.org")
         .addPathSegments("bot${context.token}/sendMessage")
         .addQueryParameter("chat_id", context.chatId)
-        .addQueryParameter("text", text)
+        .addQueryParameter("text", message.text)
         .addQueryParameter("disable_notification", mute.toString())
         .addQueryParameter("disable_web_page_preview", "true")
         .addQueryParameter("parse_mode", "markdown")
