@@ -13,31 +13,36 @@ fun main() {
     println("started with: $config")
 
     while (true) {
+        val context = Context(
+            httpClient = defaultHttpClient(),
+            json = Json { allowStructuredMapKeys = true },
+            token = config.token,
+            chatId = config.channel
+        )
         val dataFile = File("androidx.json")
-        val json = Json { allowStructuredMapKeys = true }
-        val httpClient = defaultHttpClient()
         val nextTime = try {
             update(
                 config.defaultTime,
                 config.shortTime,
                 localReader = {
-                    dataFile.read(json)
+                    dataFile.read(context.json)
                 },
                 localWriter = {
-                    dataFile.write(json, it)
+                    dataFile.write(context.json, it)
                 },
                 remoteReader = {
-                    remote(httpClient, DocumentBuilderFactory.newInstance())
+                    remote(context.httpClient, DocumentBuilderFactory.newInstance())
                 },
                 publisher = {
-                    it.publish(httpClient, config.token, config.channel)
-                })
+                    it.publish(context)
+                }
+            )
         } catch (e: Exception) {
             error("error: ${e.localizedMessage}")
             e.printStackTrace()
             config.shortTime
         } finally {
-            httpClient.connectionPool.evictAll()
+            context.destroy()
         }
         Thread.sleep(nextTime)
     }
