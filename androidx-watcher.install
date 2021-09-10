@@ -1,0 +1,13 @@
+post_install() {
+  systemctl preset androidx-watcher
+}
+post_upgrade() {
+  systemctl restart androidx-watcher
+}
+pre_remove() {
+  systemctl stop androidx-watcher
+  systemctl disable androidx-watcher
+}
+post_remove() {
+  systemctl daemon-reload
+}

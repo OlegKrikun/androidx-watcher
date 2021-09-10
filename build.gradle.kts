@@ -29,3 +29,12 @@ tasks.withType(Jar::class) {
 }
 
 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
+
+tasks.create("pkg", Copy::class) {
+    group = "build"
+    destinationDir = file("${buildDir}/out")
+    from(tasks["jar"].outputs.files)
+    from(libs) { into("lib") }
+    dependsOn("clean")
+}
+
