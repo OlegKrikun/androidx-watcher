@@ -2,17 +2,17 @@ import com.netflix.gradle.plugins.deb.Deb
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.5.30"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.30"
-    id("nebula.deb") version "8.4.1"
-    id("com.github.ben-manes.versions") version "0.39.0"
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
+    id("nebula.deb") version "9.1.0"
+    id("com.github.ben-manes.versions") version "0.41.0"
 }
 
-repositories { jcenter() }
+repositories { mavenCentral() }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 }
 
 version = "0.4.0"
