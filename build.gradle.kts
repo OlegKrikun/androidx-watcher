@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
     id("nebula.deb") version "9.1.0"
     id("com.github.ben-manes.versions") version "0.41.0"
+    id("com.doist.gradle.kotlin-warning-baseline") version "1.0.0"
 }
 
 repositories { mavenCentral() }
@@ -45,6 +46,8 @@ tasks.create("deb", Deb::class) {
     from(File(project.rootDir, "androidx-watcher.properties.example")) { into("/opt/androidx-watcher") }
 
     link("/etc/systemd/system/androidx-watcher.service", "/opt/androidx-watcher/service/androidx-watcher.service")
+
+    dependsOn("check")
 }
 
 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
