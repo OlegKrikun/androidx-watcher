@@ -1,5 +1,6 @@
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.util.Locale
 
 private const val LINK_ARCH = "https://developer.android.com/jetpack/androidx/releases/arch#"
 private const val LINK_TESTS = "https://developer.android.com/jetpack/androidx/releases/test"
@@ -93,7 +94,12 @@ private fun Artifact.createKey(name: String? = null, linkSuffix: String? = null,
             name ?: groupSuffix.split(".").joinToString(separator = " ") {
                 when (it) {
                     "ui" -> "UI"
-                    else -> it.capitalize()
+                    else -> it.replaceFirstChar { char ->
+                        when {
+                            char.isLowerCase() -> char.titlecase(Locale.getDefault())
+                            else -> char.toString()
+                        }
+                    }
                 }
             },
             fullLink ?: createUrl(groupSuffix.replace(".", "-"), linkSuffix),
